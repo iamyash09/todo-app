@@ -111,7 +111,7 @@ css">
 										describedby="emailHelp" placeholder="Enter Due time dd-mm-yyyy">
 								</select>
 							</div>
-							<button type="button" class="btn btn-secondary" data-
+							<button type="button" class="btn btn-secondary viewModal-btn-close" data-
 								dismiss="modal">Close</button>
 							<button type="submit" class="btn btn-primary">Add Todo</button>
 						</form>
@@ -241,6 +241,11 @@ js"></script>
 		 $(".editModalDetail-btn-close").click(function () {
 			 var id = $(this).attr("value");
 			 $("#editModalDetails" + id).modal("hide");
+	     });
+		 
+		 $(".viewModal-btn-close").click(function () {
+			 var id = $(this).attr("value");
+			 $("#viewModal").modal("hide");
 	     });
 	</script>
 </body>
