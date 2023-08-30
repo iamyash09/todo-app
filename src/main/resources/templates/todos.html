@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Index Page</title>
+<style type="text/css">
+#todocontainer {
+	margin-top: 50px;
+}
+</style>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.
+css">
+</head>
+<body>
+	<section id="header">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<a class="navbar-brand" href="#">TODOS</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarSupportedContent" aria-
+				controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+		</nav>
+	</section>
+	<div class="row m-2"> 
+			<p> Filter By </p>
+			<a class="btn btn-info btn-sm text-white m-1" href="/todos/Not Done" >List as "Not Done"</a>
+			<a class="btn btn-info btn-sm text-white m-1" href="/todos/Done" >List as "Done"</a>
+			<a class="btn btn-info btn-sm text-white m-1" href="/todos/Past Due" >List as "Past Due"</a>
+			<a class="btn btn-info btn-sm text-white m-1" href="/todos" >Find All</a>
+		</div>
+	<section id="todocontainer">
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-8">
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">Id</th>
+							<th scope="col">Todo</th>
+							<th scope="col">Status</th>
+							<th scope="col">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="todo : ${todos}">
+							<th scope="row" th:text=${todo.id}></th>
+							<td th:text=${todo.todoItem}></td>
+							<td th:text=${todo.status}></td>
+							<td>
+								<a class="btn btn-info btn-sm text-white viewModalDetail-btn float-left m-1"
+										th:value="${todo.id}">View Todo</a>
+
+								<a class="btn btn-info btn-sm text-white editModalDetail-btn float-left m-1"
+										th:value="${todo.id}">Update Todo</a>
+							
+								<form th:action="@{/todoDelete/{id}(id=${todo.id})}" class="float-left m-1"
+									method="POST" enctype="multipart/form-data">
+										<button type="submit"
+											class="btn btn-danger btn-sm text-white">Delete</button>
+								</form>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="d-flex justify-content-center">
+					<a class="btn btn-success btn-lg text-white" data-toggle="modal"
+						data-target="#viewModal">Add New Todo</a>
+				</div>
+			</div>
+			<div class="col-md-2"></div>
+		</div>
+		
+		<!-- View Modal -->
+		<div class="modal fade" id="viewModal" tabindex="-1" role="dialog"
+			aria- labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">TODO</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-
+							label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form th:action="@{/todoNew}" method="POST"
+							enctype="multipart/form-data">
+							<div class="form-group">
+								<label for="exampleInputEmail1">Todo</label> <input type="text"
+									class="form-control" name="todoItem" aria-
+									describedby="emailHelp" placeholder="Enter Todo">
+							</div>
+							<div class="form-group">
+								<label for="exampleFormControlSelect1">Status</label> <select
+									class="form-control" name="status">
+									<option value=""> Select Status </option>
+									<option>Done</option>
+									<option>Not Done</option>
+									<option>Past Due</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="exampleFormControlSelect1">Due Date time (If Yes)</label> 
+									<input type="text"
+										class="form-control" name="dueDateTime" aria-
+										describedby="emailHelp" placeholder="Enter Due time dd-mm-yyyy">
+								</select>
+							</div>
+							<button type="button" class="btn btn-secondary" data-
+								dismiss="modal">Close</button>
+							<button type="submit" class="btn btn-primary">Add Todo</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- View Details Modal -->
+		<div th:each="todo : ${todos}">			
+		<div  th:id="'viewModalDetails' + ${todo.id}" class="modal fade" tabindex="-1" role="dialog"
+			aria- labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">TODO Details</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-
+							label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+							<div class="form-group">
+								<label for="exampleInputEmail1" th:text="'Todo ID: ' + ${todo.id}"></label>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">TOOD Item description</label>
+								<p th:text="${todo.todoItem}"></p>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Status</label>
+								<p th:text="${todo.status}"></p>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Created On</label>
+								<p th:text="${todo.created_at}"></p>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Updated On</label>
+								<p th:text="${todo.updated_at}"></p>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Due Date time (If Yes)</label>
+								<p th:text="${todo.dueDateTime}"></p>
+							</div>
+							<button type="button" class="btn btn-secondary viewModalDetail-btn-close" data-
+								dismiss="modal" th:value="${todo.id}">Close</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+		
+		
+		<!-- Edit Details Modal -->
+		<div th:each="todo : ${todos}">			
+		<div  th:id="'editModalDetails' + ${todo.id}" class="modal fade" tabindex="-1" role="dialog"
+			aria- labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">TODO Details</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-
+							label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+							<form th:action="@{/todoUpdate/{id}(id=${todo.id})}" method="POST"
+							enctype="multipart/form-data">
+							<div class="form-group">
+								<label for="exampleInputEmail1">Todo</label> <input type="text"
+									class="form-control" name="todoItem" aria-
+									describedby="emailHelp" placeholder="Enter Todo" th:value="${todo.todoItem}">
+							</div>
+							<div class="form-group">
+								<label for="exampleFormControlSelect1">Status</label> <select
+									class="form-control" name="status">
+									<option value=""> Select Status </option>
+									<option th:selected="(${todo.status} == 'Done')">Done</option>
+									<option th:selected="(${todo.status} == 'Not Done')">Not Done</option>
+									<option th:selected="(${todo.status} == 'Past Due')">Past Due</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="exampleFormControlSelect1">Due Date time (If Yes)</label> 
+									<input type="text"
+										class="form-control" name="dueDateTime" aria-
+										describedby="emailHelp" placeholder="Enter Due time dd-mm-yyyy" th:value="${todo.dueDateTime}">
+								</select>
+							</div>
+							<button type="button" class="btn btn-secondary editModalDetail-btn-close" data-
+								dismiss="modal" th:value="${todo.id}">Close</button>
+							<button type="submit" class="btn btn-primary">Update Todo</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+						
+	</section>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.
+js"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+		
+	<script type="text/javascript">
+		 $(".viewModalDetail-btn").click(function () {
+			 var id = $(this).attr("value");
+			 $("#viewModalDetails" + id).modal("show");
+	     });
+		 
+		 $(".viewModalDetail-btn-close").click(function () {
+			 var id = $(this).attr("value");
+			 $("#viewModalDetails" + id).modal("hide");
+	     });
+		 
+		 $(".editModalDetail-btn").click(function () {
+			 var id = $(this).attr("value");
+			 $("#editModalDetails" + id).modal("show");
+	     });
+		 
+		 $(".editModalDetail-btn-close").click(function () {
+			 var id = $(this).attr("value");
+			 $("#editModalDetails" + id).modal("hide");
+	     });
+	</script>
+</body>
+</html>
